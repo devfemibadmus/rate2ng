@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rate2ng/crypto.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,11 +18,13 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Color?> _borderColor;
 
@@ -90,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
         body: TabBarView(
           children: [
-            Center(child: Text('Crypto Page')),
+            CryptoPage(),
             Center(child: Text('Currencies Page')),
             Center(child: Text('Gift Cards Page')),
             Center(child: Text('Others Page')),
