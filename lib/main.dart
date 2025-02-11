@@ -61,7 +61,6 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           actions: [
             InkWell(
               onTap: () {
-                // Open the link
                 launch('https://t.me/rate2ng');
               },
               child: AnimatedBuilder(
@@ -106,7 +105,6 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   void launch(String url) {
-    // This is just a placeholder, use the 'url_launcher' package in a real app
     print('Opening URL: $url');
   }
 }
