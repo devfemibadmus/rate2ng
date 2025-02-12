@@ -255,6 +255,7 @@ class CurrencyDetailsOverlay extends StatelessWidget {
           child: Stack(
             children: [
               SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
