@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,27 +20,40 @@ class CryptoPageState extends State<CryptoPage>
   late Timer _timer;
   List<dynamic> _cachedCoins = [];
   bool _isActive = true;
+  String _lastFetchTime = '';
 
   Future<List<dynamic>> fetchCoins() async {
-    final res =
-        await http.get(Uri.parse('https://api.coinlore.net/api/tickers/'));
-    if (res.statusCode == 200) {
-      final jsonData = json.decode(res.body);
-      return (jsonData['data'] as List).take(10).toList();
-    } else {
-      throw Exception('Failed to load coins');
-    }
+    try {
+      final res = await http
+          .get(Uri.parse('https://api.coinlore.net/api/tickers/'))
+          .timeout(Duration(seconds: 10));
+      if (res.statusCode == 200) {
+        final jsonData = json.decode(res.body);
+        setState(() {
+          _lastFetchTime =
+              DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+        });
+        saveCoinsToCache((jsonData['data'] as List).take(10).toList());
+        return (jsonData['data'] as List).take(10).toList();
+      }
+    } catch (_) {}
+    return loadCoinsFromCache();
   }
 
   Future<void> saveCoinsToCache(List<dynamic> coins) async {
     final prefs = await SharedPreferences.getInstance();
     final coinsJson = json.encode(coins);
     await prefs.setString('cachedCoins', coinsJson);
+    await prefs.setString('lastFetchTime',
+        DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()));
   }
 
   Future<List<dynamic>> loadCoinsFromCache() async {
     final prefs = await SharedPreferences.getInstance();
     final coinsJson = prefs.getString('cachedCoins');
+    setState(() {
+      _lastFetchTime = prefs.getString('lastFetchTime') ?? '';
+    });
     if (coinsJson != null) {
       final List<dynamic> cachedCoins = json.decode(coinsJson);
       return cachedCoins;
@@ -103,8 +117,15 @@ class CryptoPageState extends State<CryptoPage>
       appBar: AppBar(
         title: Text('Top 10 🔥', style: TextStyle(fontSize: 18)),
         actions: [
-          TextButton(onPressed: () {}, child: Text('Sell')),
-          TextButton(onPressed: () {}, child: Text('Buy')),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Center(
+              child: Text(
+                _lastFetchTime.isEmpty ? 'Loading...' : _lastFetchTime,
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+          ),
         ],
       ),
       body: RefreshIndicator(
