@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rate2ng/crypto.dart';
+import 'package:rate2ng/currencies.dart';
 
 void main() {
   runApp(MyApp());
@@ -95,7 +96,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         body: TabBarView(
           children: [
             CryptoPage(),
-            Center(child: Text('Currencies Page')),
+            CurrencyPage(),
             Center(child: Text('Gift Cards Page')),
             Center(child: Text('Others Page')),
           ],
