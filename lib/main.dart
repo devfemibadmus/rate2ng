@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rate2ng/crypto.dart';
 import 'package:rate2ng/currencies.dart';
-import 'package:rate2ng/vpn.dart';
+import 'package:rate2ng/swap.dart';
 
 void main() {
   runApp(MyApp());
@@ -53,43 +53,39 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Rate2NG',
-            style: TextStyle(
-              color: Color(0xFF009605),
-              fontWeight: FontWeight.w700,
+          title: Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: _borderColor.value ?? Colors.blue, width: 4),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text(
+                    'Rate2NG',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF009605),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           actions: [
-            InkWell(
-              onTap: () {
-                launch('https://t.me/rate2ng');
-              },
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (context, child) {
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: _borderColor.value ?? Colors.blue, width: 4),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Text(
-                      'Join Channel',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  );
-                },
-              ),
-            ),
+            Text('real time updates...'),
             SizedBox(width: 20),
           ],
           bottom: TabBar(
             tabs: [
               Tab(text: 'Crypto'),
               Tab(text: 'Currencies'),
-              Tab(text: 'News'),
+              Tab(text: 'Calculator'),
             ],
           ),
         ),
@@ -97,14 +93,10 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           children: [
             CryptoPage(),
             CurrencyPage(),
-            Center(child: Text('Others Page')),
+            SwapPage(),
           ],
         ),
       ),
     );
-  }
-
-  void launch(String url) {
-    print('Opening URL: $url');
   }
 }

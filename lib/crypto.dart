@@ -84,7 +84,6 @@ class CryptoPageState extends State<CryptoPage>
 
   @override
   void initState() {
-    print("reinit");
     super.initState();
     loadCoinsFromCache().then((coins) {
       if (coins.isNotEmpty) {
