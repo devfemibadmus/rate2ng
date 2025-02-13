@@ -50,7 +50,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -89,7 +89,6 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             tabs: [
               Tab(text: 'Crypto'),
               Tab(text: 'Currencies'),
-              Tab(text: 'VPN'),
               Tab(text: 'News'),
             ],
           ),
@@ -98,7 +97,6 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           children: [
             CryptoPage(),
             CurrencyPage(),
-            VPNsPage(),
             Center(child: Text('Others Page')),
           ],
         ),
