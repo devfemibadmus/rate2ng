@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rate2ng/crypto.dart';
 import 'package:rate2ng/currencies.dart';
+import 'package:rate2ng/vpn.dart';
 
 void main() {
   runApp(MyApp());
@@ -88,8 +89,8 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             tabs: [
               Tab(text: 'Crypto'),
               Tab(text: 'Currencies'),
-              Tab(text: 'Gift Cards'),
-              Tab(text: 'Others'),
+              Tab(text: 'VPN'),
+              Tab(text: 'News'),
             ],
           ),
         ),
@@ -97,7 +98,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           children: [
             CryptoPage(),
             CurrencyPage(),
-            Center(child: Text('Gift Cards Page')),
+            VPNsPage(),
             Center(child: Text('Others Page')),
           ],
         ),
