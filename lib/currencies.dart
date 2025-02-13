@@ -145,7 +145,7 @@ class CurrencyPageState extends State<CurrencyPage>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Currency Exchange 🔄', style: TextStyle(fontSize: 18)),
+        title: Text('Top 10 🔥', style: TextStyle(fontSize: 18)),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
@@ -183,42 +183,41 @@ class CurrencyPageState extends State<CurrencyPage>
                 ? '${(current - last24hrs) >= 0 ? '+' : ''}${(current - last24hrs).toStringAsFixed(2)}'
                 : '+0.00';
 
-            return InkWell(
-              onTap: () => showCurrencyOverlay(context, currency, rate),
-              child: Card(
-                child: ListTile(
-                  leading: CachedNetworkImage(
-                    cacheKey: 'currency_image_${currency["abbr"]}',
-                    imageUrl:
-                        'https://raw.githubusercontent.com/devfemibadmus/rate2ng-api/refs/heads/main/assets/currencies/${currency["abbr"] ?? 'default'}.jpg',
-                    width: 40,
-                    height: 40,
-                    fit: BoxFit.cover,
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                  ),
-                  title: Text('${currency["abbr"]}'),
-                  subtitle: Text('${currency["name"]}'),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '₦${rate["current"]}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w800, fontSize: 13),
+            return Card(
+              margin: EdgeInsets.all(8.0),
+              child: ListTile(
+                onTap: () => showCurrencyOverlay(context, currency, rate),
+                leading: CachedNetworkImage(
+                  cacheKey: 'currency_image_${currency["abbr"]}',
+                  imageUrl:
+                      'https://raw.githubusercontent.com/devfemibadmus/rate2ng-api/refs/heads/main/assets/currencies/${currency["abbr"] ?? 'default'}.jpg',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+                title: Text('${currency["abbr"]}'),
+                subtitle: Text('${currency["name"]}'),
+                trailing: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '₦${rate["current"]}',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                    ),
+                    Text(
+                      formattedValue,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 10,
+                        color: current! < last24hrs!
+                            ? const Color.fromARGB(255, 160, 11, 0)
+                            : const Color.fromARGB(255, 0, 121, 4),
                       ),
-                      Text(
-                        formattedValue,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 10,
-                          color: current! < last24hrs!
-                              ? const Color.fromARGB(255, 160, 11, 0)
-                              : const Color.fromARGB(255, 0, 121, 4),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );

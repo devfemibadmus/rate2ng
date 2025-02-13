@@ -142,53 +142,52 @@ class CryptoPageState extends State<CryptoPage>
           itemCount: _cachedCoins.length,
           itemBuilder: (context, index) {
             final coin = _cachedCoins[index];
-            return InkWell(
-              onTap: () => showCoinOverlay(context, coin),
-              child: Card(
-                child: ListTile(
-                  leading: CachedNetworkImage(
-                    cacheKey: 'coin_image_${coin["nameid"]}',
-                    imageUrl:
-                        'https://raw.githubusercontent.com/devfemibadmus/rate2ng-api/refs/heads/main/assets/${coin["nameid"] ?? 'default'}.png',
-                    width: 40,
-                    height: 40,
-                    fit: BoxFit.cover,
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                  ),
-                  title: Row(
-                    children: [
-                      Text('${coin['symbol']}'),
-                    ],
-                  ),
-                  subtitle: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('${coin['name']}'),
-                    ],
-                  ),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '\$${double.parse(coin["price_usd"]).toStringAsFixed(2).replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',')}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w800, fontSize: 13),
+            return Card(
+              margin: EdgeInsets.all(8.0),
+              child: ListTile(
+                onTap: () => showCoinOverlay(context, coin),
+                leading: CachedNetworkImage(
+                  cacheKey: 'coin_image_${coin["nameid"]}',
+                  imageUrl:
+                      'https://raw.githubusercontent.com/devfemibadmus/rate2ng-api/refs/heads/main/assets/${coin["nameid"] ?? 'default'}.png',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+                title: Row(
+                  children: [
+                    Text('${coin['symbol']}'),
+                  ],
+                ),
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${coin['name']}'),
+                  ],
+                ),
+                trailing: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '\$${double.parse(coin["price_usd"]).toStringAsFixed(2).replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',')}',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                    ),
+                    Text(
+                      '${(double.tryParse(coin["percent_change_24h"]) ?? 0) < 0 ? '' : '+'}${coin["percent_change_24h"]}%',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 10,
+                        color:
+                            (double.tryParse(coin["percent_change_24h"]) ?? 0) <
+                                    0
+                                ? const Color.fromARGB(255, 160, 11, 0)
+                                : const Color.fromARGB(255, 0, 121, 4),
                       ),
-                      Text(
-                        '${(double.tryParse(coin["percent_change_24h"]) ?? 0) < 0 ? '' : '+'}${coin["percent_change_24h"]}%',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 10,
-                          color: (double.tryParse(coin["percent_change_24h"]) ??
-                                      0) <
-                                  0
-                              ? const Color.fromARGB(255, 160, 11, 0)
-                              : const Color.fromARGB(255, 0, 121, 4),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );
