@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -22,11 +23,12 @@ class CurrencyPageState extends State<CurrencyPage>
   Map<String, dynamic> _cachedRates = {};
   bool _isActive = true;
   String _lastFetchTime = '';
+  final platform = MethodChannel('ng.rate2.rate2ng');
 
   Future<Map<String, dynamic>> fetchCurrencyMetadata() async {
     try {
       final res = await http
-          .get(Uri.parse('http://127.0.0.1:8000/'))
+          .get(Uri.parse('http://r.mediasaver.link/'))
           .timeout(Duration(seconds: 10));
       if (res.statusCode == 200) {
         final jsonData = json.decode(res.body);
@@ -38,9 +40,21 @@ class CurrencyPageState extends State<CurrencyPage>
   }
 
   Future<Map<String, dynamic>> fetchCurrencyRates() async {
+    int day = DateTime.now().weekday;
+    if (day == DateTime.saturday || day == DateTime.sunday) {
+      final prefs = await SharedPreferences.getInstance();
+      final ratesJson = prefs.getString('cachedRates');
+      setState(() {
+        _lastFetchTime =
+            DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+      });
+      if (ratesJson != null) {
+        return json.decode(ratesJson);
+      }
+    }
     try {
       final res = await http
-          .get(Uri.parse('http://127.0.0.1:8000/rates?api_key=uhmmmmmmmmm'))
+          .get(Uri.parse('http://r.mediasaver.link/rates?api_key=uhmmmmmmmmm'))
           .timeout(Duration(seconds: 10));
       if (res.statusCode == 200) {
         final jsonData = json.decode(res.body);
@@ -50,6 +64,8 @@ class CurrencyPageState extends State<CurrencyPage>
         });
         saveRatesToCache(jsonData);
         return jsonData;
+      } else if (res.statusCode == 403) {
+        await platform.invokeMethod('launchUpdate');
       }
     } catch (_) {}
     return loadRatesFromCache();
@@ -89,7 +105,7 @@ class CurrencyPageState extends State<CurrencyPage>
   }
 
   void startAutoRefresh() {
-    _timer = Timer.periodic(Duration(seconds: 2), (_) async {
+    _timer = Timer.periodic(Duration(minutes: 1), (_) async {
       if (mounted && _isActive) {
         final newRates = await fetchCurrencyRates();
         if (mounted) {
